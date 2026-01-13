@@ -17,7 +17,7 @@ import traceback
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from waitress import serve
-from decimal import Decimal  # Added for Decimal conversions
+from decimal import Decimal
 from datetime import datetime
 
 app = Flask(__name__)
@@ -114,7 +114,7 @@ def logout():
     flash("Logout realizado com sucesso!", "success")
     return redirect(url_for("login"))
 
-# Rota de registro (apenas para admin)
+# Rota de registro de usuários (apenas para admin)
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if "user_id" not in session or session.get("access_level") != "admin":
@@ -159,8 +159,6 @@ def register():
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         return "", 200
 
-    # return render_template("register.html")
-
 
 @app.route("/usuarios")
 def listar_usuarios():
@@ -200,8 +198,6 @@ def editar_usuario(user_id):
             return "", 200
         flash("Usuário atualizado com sucesso!", "success")
         return redirect(url_for("listar_usuarios"))
-
-    # return render_template("editar_usuario.html", usuario=usuario)
 
 
 @app.route("/excluir_usuario/<int:user_id>", methods=["POST"])
@@ -418,7 +414,6 @@ def adicionar_componente():
     except Package.DoesNotExist:
         return jsonify({"error": "Encapsulamento não encontrado"}), 400
     except IntegrityError:
-        # Trata falha de UNIQUE constraint de forma amigável
         return jsonify({"error": "Componente já cadastrado"}), 409
     except Exception as e:
         print("Erro ao salvar componente:", e)
@@ -439,7 +434,7 @@ def editar_componente(id_comp):
     if request.method == "POST":
         try:
             dados = request.form
-            print(f"Dados recebidos no backend: {dados}")  # Debug
+            print(f"Dados recebidos no backend: {dados}")
 
             # Atualização dos campos básicos
             if "descr" in dados:
@@ -479,12 +474,10 @@ def editar_componente(id_comp):
         except ValueError as e:
             return jsonify({"error": f"Erro de conversão: {str(e)}"}), 400
         except Exception as e:
-            print(f"Erro ao atualizar: {str(e)}")  # Debug
+            print(f"Erro ao atualizar: {str(e)}")
             return jsonify({"error": f"Erro ao atualizar: {str(e)}"}), 500
 
     return jsonify({"error": "Método não permitido"}), 405
-
-
 # FIM da rota editar_componente
 
 
@@ -506,7 +499,7 @@ def deletar_componente_rota(id_comp):
                 return jsonify({"success": "Componente excluído com sucesso!"}), 200
             flash("Componente excluído com sucesso!", "success")
     except Componentes.DoesNotExist:
-        print(f"Componente com ID {id_comp} não encontrado.")  # Log para depuração
+        print(f"Componente com ID {id_comp} não encontrado.")
         if request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return jsonify({"error": "Componente não encontrado!"}), 404
         flash("Componente não encontrado!", "danger")
@@ -527,10 +520,7 @@ def deletar_componente_rota(id_comp):
     return redirect(url_for("estoqueLab"))
 
 
-# FIM da rota deletar_componente
-
 # Rota para salvar imagens
-
 @app.route("/obter-componente/<int:id_comp>")
 def obter_componente(id_comp):
     comp = Componentes.get_or_none(Componentes.id == id_comp)
@@ -547,7 +537,7 @@ def obter_componente(id_comp):
         }
     )
 
-# Rota para Categorias ---------------------------------------------------------------
+# Rota para Categorias
 @app.route("/categorias", methods=["GET", "POST"])
 def listar_categorias():
     if "user_id" not in session or session.get("access_level") != "admin":
@@ -576,7 +566,7 @@ def listar_categorias():
 
     return render_template("categorias.html", categorias=categorias, error=error)
 
-
+# Rota para editar categorias
 @app.route("/editar_categoria/<int:id_categ>", methods=["GET", "POST"])
 def editar_categoria(id_categ):
     if "user_id" not in session or session.get("access_level") != "admin":
@@ -625,10 +615,7 @@ def excluir_categ(id_categ):
     return redirect(url_for("listar_categorias"))
 
 
-# FIM Rota para Categorias ---------------------------------------------------------------
-
-
-# Rota para  Encapsulamento--------------------------------------------------------------
+# Rota para  Encapsulamento
 @app.route("/encapsulamento", methods=["GET", "POST"])
 def listar_encapasulamento():
     if "user_id" not in session or session.get("access_level") != "admin":
@@ -659,7 +646,7 @@ def listar_encapasulamento():
         "encapsulamento.html", encapsulamento=encapsulamento, error=error
     )
 
-
+# Rota para editar encapsulamento
 @app.route("/editar_encapsulamento/<int:id_pack>", methods=["GET", "POST"])
 def editar_encapsulamento(id_pack):
     if "user_id" not in session or session.get("access_level") != "admin":
@@ -686,7 +673,7 @@ def editar_encapsulamento(id_pack):
                 return "", 200
             flash("O nome do encapsulamento não pode ser vazio.", "danger")
 
-
+# Rota para excluir encapsulamento
 @app.route("/excluir_encapsulamento/<int:id_pack>", methods=["POST"])
 def excluir_encapsulamento(id_pack):
     if "user_id" not in session or session.get("access_level") != "admin":
@@ -707,10 +694,7 @@ def excluir_encapsulamento(id_pack):
     return redirect(url_for("listar_encapasulamento"))
 
 
-# FIM Rota para Encapsulamento--------------------------------------------------------------
-
-
-# Rota para Pedidos--------------------------------------------------------------
+# Rota para Pedidos
 @app.route("/pedidos", methods=["GET", "POST"])
 def listar_pedidos():
 
@@ -738,6 +722,7 @@ def listar_pedidos():
         "pedidos.html", pedido=pedido, error=error, usuarios=usuarios
     )
 
+# Rota para adicionar pedidos
 @app.route("/adicionar-pedido", methods=["POST"])
 def adicionar_pedido_api():
     dados = request.json or {}
@@ -791,7 +776,6 @@ def api_listar_pedidos():
         except Exception as e:
             pass
 
-        
 
     if comprado_filter:
         query = query.where(Pedidos.comprado == (comprado_filter == 'true' or comprado_filter == 'Sim'))
@@ -828,6 +812,7 @@ def api_listar_pedidos():
         })
     return jsonify(lista)
 
+# Rota para editar pedidos
 @app.route("/editar_pedido/<int:id>", methods=["POST"])
 def editar_pedido(id):
     try:
@@ -864,7 +849,8 @@ def atualizar_status(id):
         return jsonify(success=True)
     except Exception as e:
         return jsonify(error=str(e)), 500
-    
+
+# Rota para excluir pedido
 @app.route("/excluir_pedido/<int:id>", methods=["POST"])
 def excluir_pedido(id):
     try:
@@ -874,7 +860,7 @@ def excluir_pedido(id):
     except Exception as e:
         return jsonify(error=str(e)), 500
     
-
+# Rota para Ordem de Serviço
 @app.route("/ordem_serv", methods=["GET", "POST"])
 def listar_ordem_serv():
     error = None
@@ -895,6 +881,7 @@ def listar_ordem_serv():
         tecnicos=tecnicos_lista
     )
 
+# Rota para excluir Ordem de Serviço
 @app.route("/excluir_os/<int:id>", methods=["POST"])
 def excluir_os(id):
     if session.get("access_level") != "admin":
@@ -908,7 +895,7 @@ def excluir_os(id):
     except Exception as e:
         return jsonify(error=str(e)), 500
     
-# Rota para SGP--------------------------------------------------------------
+# Rota para SGP
 @app.route("/sgp", methods=["GET", "POST"])
 def listar_sgp():    
     # Níveis de acesso permitidos
@@ -948,9 +935,9 @@ def listar_sgp():
         "sgp.html", sgp=sgp_records, error=error, today=today
     )
 
+# Rota para adicionar SGP
 @app.route("/adicionar-sgp", methods=["POST"])
 def adicionar_sgp_api():
-    # MODIFICADO: Adiciona verificação de nível de acesso
     if session.get("access_level") not in ["admin", "vendedor_repos", "vendedor_serv", "Comprador_gerencia"]:
         return jsonify({"error": "Acesso negado!"}), 403
     
@@ -982,6 +969,7 @@ def adicionar_sgp_api():
         traceback.print_exc()
         return jsonify(error=str(e)), 500
 
+# Rota para obter dados de uma SGP específica
 @app.route("/sgp/<int:id>")
 def get_sgp(id):
     try:
@@ -1005,6 +993,7 @@ def get_sgp(id):
     except Sgp.DoesNotExist:
         return jsonify({"error": "SGP não encontrada"}), 404
 
+# Rota para editar SGP
 @app.route("/editar-sgp/<int:id>", methods=["POST"])
 def editar_sgp_api(id):
     # Níveis permitidos para ACESSAR A ROTA e SALVAR algo
@@ -1106,8 +1095,6 @@ def api_sgp():
 
 @app.route("/adicionar-os", methods=["POST"])
 def adicionar_os():
-    # if session.get("access_level") not in ["admin", "vendedor_servico"]:
-    #     return jsonify({"error": "Acesso negado!"}), 403
 
     dados = request.get_json() or {}
 

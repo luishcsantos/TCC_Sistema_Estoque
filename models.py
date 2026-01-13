@@ -65,12 +65,9 @@ def create_database_and_tables():
         if not db.is_closed():
             db.close()
 
-
-# Executa a função para criar o banco de dados e as tabelas
 create_database_and_tables()
 
 
-# Componentes
 class Componentes(BaseModel):
     id = PrimaryKeyField()
     descr = CharField(unique=True)
@@ -87,7 +84,6 @@ class Componentes(BaseModel):
      table_name = "componentes"
 
 
-# Ttabela de categorias
 class Categoria(Model):
     id_categ = AutoField()
     categ = CharField(unique=True)
@@ -96,7 +92,6 @@ class Categoria(Model):
         database = db
         table_name = 'categoria'
 
-#Tabela Encapsulamento
 class Package(Model):
     id_pack = AutoField()
     pack = CharField(unique=True)
@@ -106,7 +101,6 @@ class Package(Model):
         table_name = 'package'
 
 
-#Tabela de pedidos
 class Pedidos(BaseModel):
     id = PrimaryKeyField()
     data = DateTimeField()
@@ -146,22 +140,21 @@ def create_database_pedidos():
 
 create_database_pedidos()
 
-#Tabela de Sgp
 class Sgp(BaseModel):
     id = PrimaryKeyField()
-    data = DateField(null=True)               # DATA
-    vendedor = CharField(null=True)           # VENDEDOR
-    descricao = TextField(null=True)          # O QUE
-    numero_pedido = CharField(null=True)      # Nº DO PEDIDO
-    cliente = CharField()                     # CLIENTE
-    previsao_entrega = DateField(null=True)   # PREVISÃO ENTREGA
-    observacao1 = TextField(null=True)        # OBSERVAÇÃO
-    almox_ciente = BooleanField(default=False)# ALMOX. CIENTE
-    data_separacao = DateField(null=True)     # DATA DA SEPARAÇÃO
-    observacao2 = TextField(null=True)        # OBSERVAÇÃO
-    forma_entrega = CharField(null=True)      # FORMA DE ENTREGA
-    finalizado_em = DateField(null=True)      # FINALIZADO EM
-    nota_fiscal = CharField(null=True)        # NOTA FISCAL
+    data = DateField(null=True)
+    vendedor = CharField(null=True)
+    descricao = TextField(null=True)
+    numero_pedido = CharField(null=True)
+    cliente = CharField()
+    previsao_entrega = DateField(null=True)
+    observacao1 = TextField(null=True)
+    almox_ciente = BooleanField(default=False)
+    data_separacao = DateField(null=True)
+    observacao2 = TextField(null=True)
+    forma_entrega = CharField(null=True)
+    finalizado_em = DateField(null=True)
+    nota_fiscal = CharField(null=True)
 
     class Meta:
         database = db
