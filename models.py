@@ -49,25 +49,6 @@ class User(BaseModel):
             return "Usuário"
 
 
-# Função para criar o banco de dados e as tabelas
-def create_database_and_tables():
-    try:
-        # Conecta ao banco de dados
-        db.connect()
-
-        # Cria as tabelas se elas não existirem
-        db.create_tables([User], safe=True)
-        print("✅ Banco de dados e tabelas criados com sucesso!")
-    except Exception as e:
-        print(f"❌ Erro ao criar banco de dados e tabelas: {e}")
-    finally:
-        # Fecha a conexão com o banco de dados
-        if not db.is_closed():
-            db.close()
-
-create_database_and_tables()
-
-
 class Componentes(BaseModel):
     id = PrimaryKeyField()
     descr = CharField(unique=True)
@@ -122,23 +103,6 @@ class Pedidos(BaseModel):
         database = db
         table_name = "pedidos"
 
-# Função para criar o banco de dados e as tabelas
-def create_database_pedidos():
-    try:
-        # Conecta ao banco de dados
-        db.connect()
-
-        # Cria as tabelas se elas não existirem
-        db.create_tables([Pedidos], safe=True)
-        print("✅ Banco de dados e tabelas de pedidos criados com sucesso!")
-    except Exception as e:
-        print(f"❌ Erro ao criar banco de dados e tabelas de pedidos: {e}")
-    finally:
-        # Fecha a conexão com o banco de dados
-        if not db.is_closed():
-            db.close()
-
-create_database_pedidos()
 
 class Sgp(BaseModel):
     id = PrimaryKeyField()
@@ -160,22 +124,6 @@ class Sgp(BaseModel):
         database = db
         table_name = "sgp"
 
-def create_database_sgp():
-    try:
-        # Conecta ao banco de dados
-        db.connect()
-
-        # Cria as tabelas se elas não existirem
-        db.create_tables([Sgp], safe=True)
-        print("✅ Banco de dados e tabelas de SGP criados com sucesso!")
-    except Exception as e:
-        print(f"❌ Erro ao criar banco de dados e tabelas de SGP: {e}")
-    finally:
-        # Fecha a conexão com o banco de dados
-        if not db.is_closed():
-            db.close()
-
-create_database_sgp()
 
 class OrdemServ(BaseModel):
     id = PrimaryKeyField()
@@ -195,20 +143,22 @@ class OrdemServ(BaseModel):
     class Meta:
         database = db
         table_name = "ordem_serv"
+        
 
-def create_database_ordem_serv():
+# Função para criar todas as tabelas do banco de dados
+def create_database_and_tables():
     try:
         # Conecta ao banco de dados
         db.connect()
 
-        # Cria as tabelas se elas não existirem
-        db.create_tables([OrdemServ], safe=True)
-        print("✅ Banco de dados e tabelas de Ordem de Serviço criados com sucesso!")
+        # Cria todas as tabelas se elas não existirem
+        db.create_tables([User, Componentes, Categoria, Package, Pedidos, Sgp, OrdemServ], safe=True)
+        print("✅ Banco de dados e todas as tabelas criados com sucesso!")
     except Exception as e:
-        print(f"❌ Erro ao criar banco de dados e tabelas de Ordem de Serviço: {e}")
+        print(f"❌ Erro ao criar banco de dados e tabelas: {e}")
     finally:
         # Fecha a conexão com o banco de dados
         if not db.is_closed():
             db.close()
 
-create_database_ordem_serv()
+create_database_and_tables()
