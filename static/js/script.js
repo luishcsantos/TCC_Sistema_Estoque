@@ -333,7 +333,7 @@ function limparCampos() {
     document.getElementById('encapsulamento-select').selectedIndex = 0;
 
     // Resetar imagem
-    document.getElementById('imagem-item').src = '/static/img/itens/sem-foto.png';
+    document.getElementById('imagem-item').src = '/static/img/componentes.png';
     document.getElementById('observacoes').value = '';
 
     // Refiltra a tabela
