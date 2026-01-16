@@ -580,7 +580,7 @@ function carregarDetalhes(id) {
             document.getElementById('categoria-select').value = getCategoriaIdByNome(data.categ);
             document.getElementById('encapsulamento-select').value = getEncapsulamentoIdByNome(data.pack);
             document.getElementById('observacoes').value = data.obs || '';
-            document.getElementById('imagem-item').src = `/static/img/itens/${id}.png`;
+            imagemElement.onerror = function() { this.src = '/static/img/componentes.png'; };
 
             document.getElementById('edit-id').value = id;
             document.getElementById('edit-descricao').value = data.descr || '';
