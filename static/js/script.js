@@ -386,7 +386,7 @@ function filtrarTabela(useStoredFilters = false) {
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhum componente encontrado</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Nenhum componente encontrado</td></tr>';
             } else {
                 data.forEach(item => {
                     let row = '';
@@ -398,6 +398,8 @@ function filtrarTabela(useStoredFilters = false) {
                             <td>${item.descr}</td>
                             <td>${item.categ}</td>
                             <td>${item.encaps}</td>
+                            <td>${item.quant}</td>
+                            <td>${item.quant_min}</td>
                             <td>${item.local}</td>
                             <td>${item.obs}</td>
                             <td>
@@ -414,6 +416,8 @@ function filtrarTabela(useStoredFilters = false) {
                             <td>${item.descr}</td>
                             <td>${item.categ}</td>
                             <td>${item.encaps}</td>
+                            <td>${item.quant}</td>
+                            <td>${item.quant_min}</td>
                             <td>${item.local}</td>
                             <td>${item.obs}</td>
                             </tr>
@@ -473,6 +477,8 @@ function abrirModalEditar(id) {
             document.getElementById('edit-descricao').value = data.descr || '';
             document.getElementById('edit-categoria').value = getCategoriaIdByNome(data.categ);
             document.getElementById('edit-encapsulamento').value = getEncapsulamentoIdByNome(data.encaps);
+            document.getElementById('edit-quant').value = data.quant || '';
+            document.getElementById('edit-quant-min').value = data.quant_min || '';
             document.getElementById('edit-local').value = data.local || '';
             document.getElementById('edit-obs').value = data.obs || '';
             document.getElementById('modal-editar').style.display = 'flex';
@@ -519,6 +525,8 @@ function editarComponenteHandler(e) {
         descr: document.getElementById('edit-descricao').value,
         categ: document.getElementById('edit-categoria').value,
         encaps: document.getElementById('edit-encapsulamento').value,
+        quant: document.getElementById('edit-quant').value,
+        quant_min: document.getElementById('edit-quant-min').value,
         local: document.getElementById('edit-local').value,
         obs: document.getElementById('edit-obs').value
     };

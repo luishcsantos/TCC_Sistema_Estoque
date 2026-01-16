@@ -141,6 +141,8 @@
         <th>Descrição</th>
         <th>Categoria</th>
         <th>Encapsulamento</th>
+        <th>Quantidade</th>
+        <th>Quantidade Mínima</th>
         <th>Local</th>
         <th>Obs</th>
         {% if session.access_level == "admin" %}
@@ -155,6 +157,8 @@
         <td>{{ item.descr }}</td>
         <td>{{ item.categ }}</td>
         <td>{{ item.encaps }}</td>
+        <td>{{ item.quant }}</td>
+        <td>{{ item.quant_min }}</td>
         <td>{{ item.local }}</td>
         <td>{{ item.obs }}</td>
         <td>
@@ -193,6 +197,12 @@
           <option value="{{ item.id_pack }}">{{ item.pack }}</option>
           {% endfor %}
         </select>
+
+        <label>Quantidade:</label>
+        <input type="number" id="edit-quant" min="0">
+
+        <label>Quantidade Mínima:</label>
+        <input type="number" id="edit-quant-min" min="0">
 
         <label>Local:</label>
         <input type="text" id="edit-local">
