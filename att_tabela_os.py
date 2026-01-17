@@ -81,6 +81,34 @@ else:
                     print(row)
             else:
                 print("Não foi possível atualizar as OS pois não há técnicos válidos.")
+        
+        # 5. Aleatorizar valores de serviço
+        print("\n--- Atualizando valores de serviço ---")
+        try:
+            cursor.execute("SELECT id FROM ordem_serv")
+            os_ids = cursor.fetchall()
+            
+            if os_ids:
+                service_updates = []
+                for (os_id,) in os_ids:
+                    # Gerar valor aleatório entre 50 e 1500 reais
+                    random_value = round(random.uniform(50, 1500), 2)
+                    service_updates.append((random_value, os_id))
+                
+                cursor.executemany("UPDATE ordem_serv SET valor_servico = ? WHERE id = ?", service_updates)
+                conn.commit()
+                print(f"Sucesso! {len(service_updates)} valores de serviço atualizados.")
+                
+                # Mostrar amostra
+                cursor.execute("SELECT id, valor_servico FROM ordem_serv LIMIT 5")
+                print("Amostra dos valores atualizados:")
+                for row in cursor.fetchall():
+                    print(row)
+            else:
+                print("Nenhuma Ordem de Serviço encontrada para atualizar valores.")
+                
+        except Exception as e:
+            print(f"Erro ao atualizar valores de serviço: {e}")
 
     except Exception as e:
         print(f"Erro: {e}")
