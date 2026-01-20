@@ -6,6 +6,8 @@
 4. Instale os requisitos - pip install -r .\requirements.txt
 5. Rode o comando `flask run --debug` ou `python app.py` , você poderá acessar a aplicação pelo navegador em `127.0.0.1:5000` ou `localhost:5000`
 
+---
+
 * Para fazer o APP.exe
 
 Com console:
@@ -60,6 +62,8 @@ pyinstaller `
 E colamos o banco na mesma pasta.
 
 Ao executar o .exe, seu PC estará rodando a aplicação da mesma forma que no console. Para fechar basta parar o processo `App` pelo gerenciador de tarefas do Windows.
+
+---
 
 * Para rodar o sistema como serviço no Windows
 
