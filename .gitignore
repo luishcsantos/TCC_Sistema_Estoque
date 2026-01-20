@@ -4,9 +4,5 @@ venv/
 build/
 dist/
 
-# Banco de dados SQLite
-database/bancoestoque.db
-database/
-
 # Ignora qualquer arquivo .spec, independente do nome da versão
 *.spec
