@@ -73,13 +73,13 @@ class Categoria(Model):
         database = db
         table_name = 'categoria'
 
-class Package(Model):
+class Encapsulamento(Model):
     id_pack = AutoField()
     pack = CharField(unique=True)
     
     class Meta:
         database = db
-        table_name = 'package'
+        table_name = 'encapsulamento'
 
 
 class Pedidos(BaseModel):
@@ -152,7 +152,7 @@ def create_database_and_tables():
         db.connect()
 
         # Cria todas as tabelas se elas não existirem
-        db.create_tables([User, Componentes, Categoria, Package, Pedidos, Sgp, OrdemServ], safe=True)
+        db.create_tables([User, Componentes, Categoria, Encapsulamento, Pedidos, Sgp, OrdemServ], safe=True)
         print("✅ Banco de dados e todas as tabelas criados com sucesso!")
     except Exception as e:
         print(f"❌ Erro ao criar banco de dados e tabelas: {e}")

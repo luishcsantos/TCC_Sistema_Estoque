@@ -9,7 +9,7 @@ from flask import (
     flash,
     make_response,
 )
-from models import db, User, Componentes, Categoria, Package, Pedidos, Sgp, OrdemServ
+from models import db, User, Componentes, Categoria, Encapsulamento, Pedidos, Sgp, OrdemServ
 import os
 from peewee import *
 from livereload import Server
@@ -62,7 +62,7 @@ with app.app_context():
 
         # Cria tabelas apenas se não existirem
         try:
-            db.create_tables([User, Componentes, Categoria, Package, Pedidos, Sgp], safe=True)
+            db.create_tables([User, Componentes, Categoria, Encapsulamento, Pedidos, Sgp], safe=True)
         except IntegrityError:
             print("Tabelas ja existem")
 
@@ -261,7 +261,7 @@ def estoqueLab():
     try:
         estoque = Componentes.select().order_by(Componentes.descr)
         categorias = Categoria.select().order_by(Categoria.categ)
-        encapsulamento = Package.select().order_by(Package.pack)
+        encapsulamento = Encapsulamento.select().order_by(Encapsulamento.pack)
         return render_template(
             "index.html",
             estoque=estoque,
@@ -317,13 +317,13 @@ def filtrar_componentes():
             query = query.where(Componentes.categ == categ.categ)
         if encapsulamento_id and encapsulamento_id != "":
             encapsulamento_id = int(encapsulamento_id)
-            encaps = Package.get(Package.id_pack == encapsulamento_id)
+            encaps = Encapsulamento.get(Encapsulamento.id_pack == encapsulamento_id)
             query = query.where(
                 Componentes.encaps == encaps.pack
             )  # Compara Componentes.encaps com o NOME do encapsulamento
         if descricao:
             query = query.where(Componentes.descr ** f"%{descricao}%")  # icontains
-    except (ValueError, Categoria.DoesNotExist, Package.DoesNotExist) as e:
+    except (ValueError, Categoria.DoesNotExist, Encapsulamento.DoesNotExist) as e:
         return jsonify({"error": "Parâmetro inválido ou registro não encontrado"}), 400
 
     componentes = [
@@ -352,7 +352,7 @@ def componente(id_comp):
 
     try:
         cat = Categoria.get(Categoria.categ == comp.categ)
-        pack = Package.get(Package.pack == comp.encaps)
+        pack = Encapsulamento.get(Encapsulamento.pack == comp.encaps)
         id_categ = cat.id_categ
         id_pack  = pack.id_pack
     except:
@@ -389,7 +389,7 @@ def adicionar_componente():
 
     try:
         categoria = Categoria.get(Categoria.id_categ == dados["categoria"])
-        encaps    = Package.get(Package.id_pack  == dados["encapsulamento"])
+        encaps    = Encapsulamento.get(Encapsulamento.id_pack  == dados["encapsulamento"])
 
         # → Verifica se já existe um componente igual
         existente = Componentes.get_or_none(
@@ -414,7 +414,7 @@ def adicionar_componente():
 
     except Categoria.DoesNotExist:
         return jsonify({"error": "Categoria não encontrada"}), 400
-    except Package.DoesNotExist:
+    except Encapsulamento.DoesNotExist:
         return jsonify({"error": "Encapsulamento não encontrado"}), 400
     except IntegrityError:
         return jsonify({"error": "Componente já cadastrado"}), 409
@@ -464,9 +464,9 @@ def editar_componente(id_comp):
             # Atualiza encapsulamento se enviado
             if "encaps" in dados:
                 try:
-                    encaps = Package.get(Package.id_pack == int(dados["encaps"]))
+                    encaps = Encapsulamento.get(Encapsulamento.id_pack == int(dados["encaps"]))
                     componente.encaps = encaps.pack
-                except Package.DoesNotExist:
+                except Encapsulamento.DoesNotExist:
                     return jsonify({"error": "Encapsulamento não encontrado"}), 400
 
             componente.save()
@@ -631,7 +631,7 @@ def listar_encapasulamento():
         try:
             novo_encapsulamento = request.form["package"].strip()
             if novo_encapsulamento:
-                Package.create(pack=novo_encapsulamento)
+                Encapsulamento.create(pack=novo_encapsulamento)
                 flash("Encapsulamento adicionado com sucesso!", "success")
                 return redirect(url_for("listar_encapasulamento"))
         except IntegrityError:
@@ -640,7 +640,7 @@ def listar_encapasulamento():
             error = f"Erro ao adicionar encapsulamento: {str(e)}"
 
     try:
-        encapsulamento = Package.select().order_by(Package.id_pack)
+        encapsulamento = Encapsulamento.select().order_by(Encapsulamento.id_pack)
     except Exception as e:
         error = f"Erro ao carregar encapsulamento: {str(e)}"
         encapsulamento = []
@@ -657,8 +657,8 @@ def editar_encapsulamento(id_pack):
         return redirect(url_for("estoqueLab"))
 
     try:
-        encapsulamento = Package.get(Package.id_pack == id_pack)
-    except Package.DoesNotExist:
+        encapsulamento = Encapsulamento.get(Encapsulamento.id_pack == id_pack)
+    except Encapsulamento.DoesNotExist:
         flash("Encapsulamento não encontrado!", "danger")
         return redirect(url_for("listar_encapasulamento"))
 
@@ -685,11 +685,11 @@ def excluir_encapsulamento(id_pack):
 
     try:
         with db.atomic():
-            encapsulamento = Package.get(Package.id_pack == id_pack)
+            encapsulamento = Encapsulamento.get(Encapsulamento.id_pack == id_pack)
             encapsulamento.delete_instance()
             flash("Encapsulamento excluído com sucesso!", "success")
 
-    except Package.DoesNotExist:
+    except Encapsulamento.DoesNotExist:
         flash("Encapsulamento não encontrado!", "danger")
     except Exception as e:
         flash(f"Erro ao excluir encapsulamento: {str(e)}", "danger")
