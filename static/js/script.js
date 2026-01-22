@@ -194,9 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 equipamento: form.elements.equipamento.value,
                 tecnico_responsavel: form.elements.tecnico_responsavel.value,
                 data_aprovacao: form.elements.data_aprovacao.value,
-                // tempo_conserto: form.elements.tempo_conserto.value,
-                // data_entrega: form.elements.data_entrega.value,
-                // dias_atraso: form.elements.dias_atraso.value,
                 observacoes: form.elements.observacoes.value
             };
             
@@ -240,9 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 tecnico_responsavel: form.elements.tecnico_responsavel.value,
                 valor_servico: form.elements.valor_servico?.value || '',
                 data_aprovacao: form.elements.data_aprovacao.value,
-                // tempo_conserto: form.elements.tempo_conserto.value,
-                // data_entrega: form.elements.data_entrega.value,
-                // dias_atraso: dias_atraso,
                 observacoes: form.elements.observacoes.value
             };
 
@@ -264,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- LÓGICA PARA ADICIONAR SGP ---
+    // Adicionar Sgp
     const form = document.getElementById('form-sgp-add');
     if (form) {
         form.onsubmit = async function (e) {
@@ -296,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     };
-    // Olhinho para mostrar/ocultar senha no login
 const passwordInput = document.getElementById('password');
 const togglePassword = document.getElementById('toggle-password');
 const eyeIcon = document.getElementById('eye-icon');
@@ -317,7 +310,6 @@ if (togglePassword && passwordInput && eyeIcon) {
 
 });
 
-// Global variables to store the last applied filter
 let gLastCategoriaFilter = '';
 let gLastEncapsulamentoFilter = '';
 let gLastDescricaoFilter = '';
@@ -346,12 +338,10 @@ function filtrarTabela(useStoredFilters = false) {
     const selEnc = document.getElementById('encapsulamento-select');
     const inpDesc = document.getElementById('descricao');
     if (!selCat || !selEnc || !inpDesc) {
-        // não há tabela ou filtros nesta página
         return;
     }
 
     let descricao = inpDesc.value.trim();
-    // cancela se tiver de 1 a 2 caracteres
     if (descricao.length > 0 && descricao.length < 2) {
         const tbody = document.querySelector('.tabela-componentes tbody');
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Digite ao menos 2 caracteres</td></tr>';
@@ -365,7 +355,6 @@ function filtrarTabela(useStoredFilters = false) {
         encapsulamento = gLastEncapsulamentoFilter;
         descricao = gLastDescricaoFilter;
 
-        // Optionally, update the DOM elements to reflect these stored values
         selCat.value = categoria;
         selEnc.value = encapsulamento;
         inpDesc.value = descricao;
@@ -373,7 +362,6 @@ function filtrarTabela(useStoredFilters = false) {
         categoria = selCat.value;
         encapsulamento = selEnc.value;
 
-        // Update global stored filters as a new filter is being applied
         gLastCategoriaFilter = categoria;
         gLastEncapsulamentoFilter = encapsulamento;
         gLastDescricaoFilter = descricao;
@@ -434,7 +422,6 @@ function filtrarTabela(useStoredFilters = false) {
         });
 }
 
-// CORREÇÃO PRINCIPAL: Vincula o clique apenas a linhas com 'data-id'
 function attachRowListeners() {
     document.querySelectorAll('.tabela-componentes tbody tr[data-id]').forEach(tr => {
         tr.style.cursor = 'pointer';
@@ -454,9 +441,9 @@ function deletarComponente(id) {
     })
         .then(response => {
             if (response.redirected) {
-                window.location.href = response.url; // Caso sessão expire
+                window.location.href = response.url;
             } else if (response.ok) {
-                filtrarTabela(); // Atualiza a tabela após deletar
+                filtrarTabela();
             } else {
                 alert('Erro ao excluir componente!');
             }
@@ -485,7 +472,6 @@ function abrirModalEditar(id) {
         });
 }
 
-// torna a função visível globalmente (para o onclick inline)
 function fecharModalEditar() {
     const modal = document.getElementById('modal-editar');
     if (modal) modal.style.display = 'none';
@@ -556,7 +542,6 @@ function editarComponenteHandler(e) {
         });
 }
 
-// Funções auxiliares para pegar o ID pelo nome (ajuste conforme seu backend)
 function getCategoriaIdByNome(nome) {
     const select = document.getElementById('categoria-select');
     for (let option of select.options) {
@@ -572,7 +557,6 @@ function getEncapsulamentoIdByNome(nome) {
     return '';
 }
 
-// CORREÇÃO: Adiciona uma verificação para evitar a chamada com ID 'undefined'
 function carregarDetalhes(id) {
     if (!id) return;
     fetch(`/componente/${id}`)
@@ -605,11 +589,9 @@ function toggleMenu() {
     nav.classList.toggle('open');
 }
 
-// Fecha o menu ao clicar fora (opcional)
 document.addEventListener('click', function (e) {
     const nav = document.querySelector('.nav-menu');
     const btn = document.querySelector('.menu-toggle');
-    // Se não encontrar elementos, não faz nada
     if (!nav || !btn) return;
     if (nav.classList.contains('open') && !nav.contains(e.target) && !btn.contains(e.target)) {
         nav.classList.remove('open');
@@ -651,7 +633,6 @@ function adicionarPedidoHandler() {
     const dados = {
         componente: document.getElementById('componente').value,
         link: document.getElementById('link').value,
-        // fornecedor: document.getElementById('fornecedor').value,
         quantidade: document.getElementById('quantidade').value,
         urgente: document.getElementById('urgente').checked,
         motivo: document.getElementById('motivo').value
@@ -673,7 +654,6 @@ function adicionarPedidoHandler() {
                 // limpa campos
                 document.getElementById('componente').value = '';
                 document.getElementById('link').value = '';
-                // document.getElementById('fornecedor').value = '';
                 document.getElementById('quantidade').value = '';
                 document.getElementById('urgente').checked = false;
                 document.getElementById('motivo').value = '';
@@ -710,12 +690,10 @@ function carregarPedidos() {
         params.data = selData.value;
     }
     
-    // NOVO FILTRO: Pesquisa por componente
     if (inpComponente && inpComponente.value.trim()) {
         params.componente_search = inpComponente.value.trim();
     }
 
-    // Constrói a query string
     const queryString = new URLSearchParams(params).toString();
     if (queryString) {
         url += `?${queryString}`;
@@ -727,7 +705,6 @@ function carregarPedidos() {
             const tbody = document.querySelector('#tabelaPedidos tbody');
             tbody.innerHTML = '';
 
-            // ... (o restante da função 'carregarPedidos' permanece o mesmo)
             pedidos.forEach(p => {
                 const tr = document.createElement('tr');
 
@@ -763,7 +740,6 @@ function carregarPedidos() {
                     tr.classList.remove('pedido-nao-comprado');
                     tr.classList.add('pedido-chegou');
                 }
-                // ... (código para preencher a linha da tabela)
                 tr.innerHTML = `
                     <td>${p.data}</td>
                     <td>${p.componentes}</td>
@@ -799,7 +775,6 @@ function carregarPedidos() {
                         </td>` : ''}
                 `;
 
-                // Event listeners para checkboxes
                 const chkComprado = tr.querySelector('.comprado-checkbox');
                 if (window.isAdmin || window.isComprador) {
                     chkComprado.addEventListener('change', () => {
@@ -828,7 +803,6 @@ function carregarPedidos() {
         .catch(handleError);
 }
 
-// Funções auxiliares
 function handleResponse(response) {
     if (!response.ok) throw new Error('Erro na rede');
     return response.json();
@@ -919,23 +893,22 @@ function deletarPedido(id) {
     })
         .then(response => {
             if (response.redirected) {
-                window.location.href = response.url; // Caso sessão expire
+                window.location.href = response.url;
             } else if (response.ok) {
-                carregarPedidos(); // Atualiza a tabela após deletar
+                carregarPedidos();
             } else {
                 alert('Erro ao excluir pedido!');
             }
         })
         .catch(() => alert('Erro ao excluir pedido!'));
 }
-// torna a função visível globalmente (para o onclick inline)
 window.excluir_pedido = deletarPedido;
 
 // Helper para converter data dd/mm/yyyy para yyyy-mm-dd
 function formatarDataInput(data) {
     if (!data) return '';
     const [dia, mes, ano] = data.split('/'); return `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
-}// Carregar pedidos ao abrir a página pedidos.html
+}
 if (window.location.pathname.includes('/pedidos')) {
     carregarPedidos();
 }
@@ -949,18 +922,18 @@ async function carregarOrdemServ() {
         }
         const data = await resp.json();
 
-        // 1. Pré-processa os dados para calcular os dias de atraso e a data de entrega esperada (20 dias após aprovação)
+        // 1. Pré-processa os dados para calcular os dias de atraso e a data de entrega esperada
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
         const msPerDay = 1000 * 60 * 60 * 24;
 
         const dadosComAtraso = data.map(os => {
             let dias_atraso = 0;
-            let dataEntregaCalculada = null; // Data esperada para entrega (20 dias após a aprovação)
-            let dataEntregaDisplay = '';    // String para exibição (DD/MM/YYYY)
-            let isAtrasada = false;         // Flag para determinar o estilo
+            let dataEntregaCalculada = null;
+            let dataEntregaDisplay = '';
+            let isAtrasada = false;
 
-            // 1.1 Calcular a Data de Entrega Esperada (20 dias após a aprovação)
+            // 1.1 Calcular a Data de Entrega Esperada
             if (os.data_aprovacao) {
                 const dataAprovacaoDate = new Date(os.data_aprovacao + "T00:00:00");
                 dataEntregaCalculada = new Date(dataAprovacaoDate);
@@ -970,10 +943,10 @@ async function carregarOrdemServ() {
 
             // 1.2. Calcular Dias de Atraso/Restantes
             if (dataEntregaCalculada && os.status !== "Finalizada") {
-                const diffTime = dataEntregaCalculada - hoje; // Diferença: Data Entrega - Hoje (pode ser + ou -)
+                const diffTime = dataEntregaCalculada - hoje; // Diferença: Data Entrega - Hoje
 
                 if (diffTime < 0) {
-                    // Atrasado: resultado deve ser negativo (-5 para 5 dias de atraso).
+                    // Atrasado: resultado deve ser negativo
                     dias_atraso = Math.ceil(diffTime / msPerDay);
                     isAtrasada = dias_atraso < 0;
                     
@@ -983,7 +956,7 @@ async function carregarOrdemServ() {
                          isAtrasada = true;
                     }
                 } else {
-                    // Em dia/Restante: resultado deve ser positivo (12 para 12 dias restantes).
+                    // Em dia/Restante: resultado deve ser positivo
                     dias_atraso = Math.floor(diffTime / msPerDay);
                     isAtrasada = false;
                 }
@@ -991,7 +964,7 @@ async function carregarOrdemServ() {
                 isAtrasada = false;
             }
 
-            return { ...os, dias_atraso, dataEntregaDisplay, isAtrasada }; // Adiciona campos calculados
+            return { ...os, dias_atraso, dataEntregaDisplay, isAtrasada };
         });
 
         // 2. Ordena os dados
@@ -1003,7 +976,7 @@ async function carregarOrdemServ() {
             if (aFinalizada && !bFinalizada) return 1;
             if (!aFinalizada && bFinalizada) return -1;
 
-            // 2.2 Atrasadas no topo, ordenadas do mais atrasado (-10 antes de -5)
+            // 2.2 Atrasadas no topo, ordenadas do mais atrasado
             const aAtrasado = a.isAtrasada;
             const bAtrasado = b.isAtrasada;
 
@@ -1011,10 +984,10 @@ async function carregarOrdemServ() {
             if (!aAtrasado && bAtrasado) return 1;
 
             if (aAtrasado && bAtrasado) {
-                return a.dias_atraso - b.dias_atraso; // Ordem Crescente (mais negativo primeiro)
+                return a.dias_atraso - b.dias_atraso;
             }
 
-            // 2.3 Demais: ordenadas da mais antiga para a mais recente (usando a data de aprovação)
+            // 2.3 Demais: ordenadas da mais antiga para a mais recente
             const dateA = a.data_aprovacao ? new Date(a.data_aprovacao) : new Date(0);
             const dateB = b.data_aprovacao ? new Date(b.data_aprovacao) : new Date(0);
             return dateA - dateB;
@@ -1045,7 +1018,6 @@ async function carregarOrdemServ() {
                 tr.classList.add('status-aguardando-material');
             }
 
-            // A lógica de dias de atraso agora usa a propriedade pré-calculada isAtrasada
             if (os.isAtrasada) {
                 tr.classList.add('dias-atraso-os');
                 tr.classList.remove('status-aguardando-material');
@@ -1089,11 +1061,9 @@ async function carregarOrdemServ() {
 
         table.appendChild(tbody);
 
-        // Hide valor_servico column based on access level
         const valorServicoHeader = table.querySelector('thead th:nth-child(7)');
         const valorServicoCells = table.querySelectorAll('tbody td:nth-child(7)');
 
-        // O cabeçalho e as células de valor de serviço podem ter sido removidos pelo Jinja2 no HTML, mas garantimos a visibilidade aqui.
         if (valorServicoHeader) {
             if (window.isAdmin || window.isVendedor_repos || window.isVendedor_serv || window.isdiretoria) {
                 valorServicoHeader.classList.remove('hide-valor-servico');
@@ -1111,34 +1081,7 @@ async function carregarOrdemServ() {
     }
 }
 
-//function deletarOS(id) {
-//    if (!confirm('Tem certeza que deseja excluir esta Ordem de Serviço?')) return;
-
-//    fetch(`/excluir_os/${id}`, {
-//        method: 'POST',
-  //      headers: {
-    //        'X-Requested-With': 'XMLHttpRequest'
-      //  }
-    //})
-     //   .then(response => {
-       //     if (response.ok) {
-         //       return response.json();
-       //     }
-        //    throw new Error('Erro na resposta do servidor');
-       // })
-        //.then(data => {
-         //   if (data.success) {
-           //     alert('Ordem de Serviço excluída com sucesso!');
-             //   carregarOrdemServ(); // Recarrega a tabela
-           // } else {
-           //     alert(data.error || 'Erro ao excluir Ordem de Serviço.');
-           // }
-       // })
-       // .catch(error => {
-        //    console.error('Erro:', error);
-        //    alert('Erro ao excluir Ordem de Serviço!');
-       // });
-//}
+// Deletar OS
 function deletarOS(id) {
     if (!confirm('Tem certeza que deseja excluir esta OS?')) return;
 
@@ -1158,7 +1101,7 @@ function deletarOS(id) {
         fecharModalOS('modal-os-edit'); 
         if (data.success) {
             alert('OS excluída com sucesso!');
-            window.location.reload(); // <-- Adicione isso
+            window.location.reload();
         } else {
             alert(data.error || 'Erro ao excluir OS.');
         }
@@ -1170,7 +1113,6 @@ function deletarOS(id) {
 }
 window.deletarOS = deletarOS;
 
-// Function to filter the OS table
 function filtrarColunaOS(input, column) {
     let filter = input.value.toUpperCase();
     let table = document.querySelector('.tabela-componentes');
@@ -1189,12 +1131,11 @@ function filtrarColunaOS(input, column) {
     }
 }
 
-// Helper function to get the column index
 function getColumnIndex(column) {
     switch (column) {
         case "status": return 1;
         case "cliente": return 3;
-        default: return -1; // Return -1 if column is not found
+        default: return -1;
     }
 }
 
@@ -1223,11 +1164,6 @@ async function abrirModalEditarOS(id) {
             form.elements.valor_servico.value = data.valor_servico || '';
         }
         form.elements.data_aprovacao.value = data.data_aprovacao || '';
-        // form.elements.tempo_conserto.value = data.tempo_conserto || '';
-        // form.elements.data_entrega.value = data.data_entrega || '';
-        // if (form.elements.dias_atraso) {
-        //   form.elements.dias_atraso.value = data.dias_atraso || '';
-        // }
         if (form.elements.observacoes) {
             form.elements.observacoes.value = data.observacoes || '';
         }
@@ -1243,7 +1179,7 @@ async function abrirModalEditarOS(id) {
 function filtrarColunaSelect(select, columnIndex) {
     let filter = select.value;
     let table = document.querySelector('.tabela-componentes');
-    if (!table) return; // Evita erro se a tabela não existir
+    if (!table) return;
     let tr = table.getElementsByTagName('tr');
 
     // Começa do índice correto para pular cabeçalhos (2 se tiver dois <tr> no <thead>)
@@ -1261,7 +1197,7 @@ function filtrarColunaSelect(select, columnIndex) {
 }
 
 
-// --- FUNÇÕES DE CONTROLE DOS MODAIS ---
+// Funções de controle dos modais
 function abrirModalOS() {
     // preenche a data de abertura com a atual
     const inputDataAbertura = document.querySelector('#form-os-add [name="data_abertura"]');
@@ -1345,14 +1281,14 @@ function SomaOs() {
 
     const rows = table.querySelectorAll('tbody tr');
     rows.forEach(tr => {
-        const status = tr.querySelector('td:nth-child(2)')?.textContent.trim(); // coluna do status
-        if (status !== "Finalizada") { // ✅ soma todas que NÃO estão finalizadas
+        const status = tr.querySelector('td:nth-child(2)')?.textContent.trim();
+        if (status !== "Finalizada") {
             const tdValor = tr.querySelector('td.valor-servico');
             if (tdValor) {
                 const valor = tdValor.textContent
-                    .replace(/[^\d,,-]/g, '')   // mantém apenas dígitos e vírgula
-                    .replace('.', '')           // remove separador de milhar
-                    .replace(',', '.');         // vírgula vira ponto decimal
+                    .replace(/[^\d,,-]/g, '')
+                    .replace('.', '')
+                    .replace(',', '.');
                 if (valor) total += parseFloat(valor) || 0;
             }
         }
@@ -1365,7 +1301,6 @@ function SomaOs() {
     }
 }
 function abrirModalSGP() {
-    // preenche a data de abertura com a atual
     const inputData = document.querySelector('#form-sgp-add [name="data"]');
     const inputPrevisaoEntrega = document.querySelector('#form-sgp-add [name="previsao_entrega"]');
     if (inputData) {
@@ -1385,7 +1320,6 @@ function fecharModalSGP(modalId) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
 
-    // Restaura todos os checkboxes dentro do modal
     modal.querySelectorAll('.almox-ciente-checkbox').forEach(cb => {
         if (cb.dataset.originalChecked !== undefined) {
             cb.checked = cb.dataset.originalChecked === 'true';
@@ -1423,9 +1357,8 @@ function deletarSGP(id) {
         alert('Erro ao excluir SGP!');
     });
 }
-// torna a função global para o onclick inline
 window.deletarSGP = deletarSGP;
-// Função para abir o modal de edição da SGP
+
 async function abrirModalEditarSGP(id) {
     try {
         const resp = await fetch(`/sgp/${id}`);
@@ -1461,22 +1394,18 @@ async function abrirModalEditarSGP(id) {
             }
         });
 
-        // Campos do Almoxarifado
         const almoxFields = ['almox_ciente', 'data_separacao', 'observacao2', 'forma_entrega', 'finalizado_em', 'nota_fiscal'];
         
         // Trata Almox Ciente (checkbox)
         const almoxCienteCheckbox = form.elements.almox_ciente;
         if (almoxCienteCheckbox) {
              almoxCienteCheckbox.checked = !!data.almox_ciente;
-             // O disabled é controlado pelo HTML via Jinja2 (só Admin e Almoxarifado editam)
         }
 
-        // Trata os outros campos do Almoxarifado
         almoxFields.filter(name => name !== 'almox_ciente').forEach(name => {
             const element = form.elements[name];
             if (element) {
                 element.value = data[name] || '';
-                // O readonly é controlado pelo HTML via Jinja2 (só Admin e Almoxarifado editam)
             }
         });
 
@@ -1492,7 +1421,6 @@ async function abrirModalEditarSGP(id) {
         console.error("Falha ao abrir modal de edição:", error);
         alert("Não foi possível carregar os dados para edição.");
     }
-    // ... (restante da função onsubmit que lida com o save)
     const formSgpEdit = document.getElementById('form-sgp-edit');
     if (formSgpEdit) {
         formSgpEdit.onsubmit = async function(e) {
@@ -1500,11 +1428,9 @@ async function abrirModalEditarSGP(id) {
             const formData = new FormData(formSgpEdit);
             const data = Object.fromEntries(formData.entries());
              
-            // Garante que o valor do checkbox seja enviado corretamente, mesmo se estiver disabled para outros
             if (formSgpEdit.elements.almox_ciente) {
                  data.almox_ciente = formSgpEdit.elements.almox_ciente.checked;
             } else {
-                 // Se o campo não existe (oculto para vendedor_repos), o backend irá ignorá-lo
                  delete data.almox_ciente;
             }
              

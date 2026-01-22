@@ -25,7 +25,6 @@ app.secret_key = os.urandom(24)  # Chave secreta para sessões
 
 
 @app.before_request
-# Proteger rotas existentes
 def require_login():
     allowed_routes = ["login", "static"]
     if request.endpoint not in allowed_routes and "user_id" not in session:
@@ -242,7 +241,7 @@ def alterar_senha():
 
     try:
         user = User.get(User.id == session["user_id"])
-        # Proteção: só o próprio admin pode trocar a senha dele
+        # Proteção: só o próprio admin (geral) pode trocar a senha dele
         if user.username == "admin" and session.get("username") != "admin":
             return jsonify({"error": "A senha do admin só pode ser alterada pelo próprio admin."}), 403
 
@@ -322,7 +321,7 @@ def filtrar_componentes():
                 Componentes.encaps == encaps.pack
             )  # Compara Componentes.encaps com o NOME do encapsulamento
         if descricao:
-            query = query.where(Componentes.descr ** f"%{descricao}%")  # icontains
+            query = query.where(Componentes.descr ** f"%{descricao}%")
     except (ValueError, Categoria.DoesNotExist, Encapsulamento.DoesNotExist) as e:
         return jsonify({"error": "Parâmetro inválido ou registro não encontrado"}), 400
 
@@ -913,7 +912,6 @@ def listar_sgp():
 
     if request.method == "POST":
         try:
-            # ... (código de adição de SGP)
             novo_sgp = request.form["sgp"].strip()
             if novo_sgp:
                 Sgp.create(pack=novo_sgp)
@@ -924,7 +922,7 @@ def listar_sgp():
             error = f"Erro ao adicionar SGP: {str(e)}"
 
     try:
-        # Ordena pela data, do mais recente para o mais antigo (DESC)
+        # Ordena pela data, do mais recente para o mais antigo
         sgp_records = Sgp.select().order_by(Sgp.data.desc(), Sgp.id.desc())
         
     except Exception as e:
@@ -1039,11 +1037,9 @@ def editar_sgp_api(id):
 
         # 2. ATUALIZAÇÃO DOS CAMPOS DO ALMOXARIFADO (Permitido para admin e almoxarifado)
         if can_edit_almox:
-            # almox_ciente é um booleano
             if "almox_ciente" in dados:
                 almox_ciente = dados.get("almox_ciente")
                 sgp_record.almox_ciente = bool(almox_ciente) if not isinstance(almox_ciente, bool) else almox_ciente
-            # A partir daqui, são campos de texto/data
             if "data_separacao" in dados:
                 sgp_record.data_separacao = parse_date(dados.get("data_separacao"))
             if "observacao2" in dados:
@@ -1080,7 +1076,7 @@ def excluir_sgp(id):
 @app.route("/api/sgp")
 def api_sgp():
     try:
-        s = Sgp.get_by_id(id)  # busca pelo ID
+        s = Sgp.get_by_id(id)
         sgp_data = {
             "id": s.id,
             "almox_ciente": s.almox_ciente,
@@ -1228,17 +1224,5 @@ def editar_os(id):
         return jsonify(error=str(e)), 500
 
 if __name__ == "__main__":
-    # # Configuração do servidor de desenvolvimento com livereload
-    # server = Server(app.wsgi_app)
-
-    # # # Configuração correta para monitoramento
-    # server.watch("templates/**/*.html")  # Padrão glob
-    # server.watch("static/**/*")  # Todas extensões
-
-    # # Configurações de desenvolvimento
-    # app.config["TEMPLATES_AUTO_RELOAD"] = True
-
-    # server.serve(host="0.0.0.0", port=80, debug=True, restart_delay=1)
-
     print("Iniciando servidor de produção Waitress na porta 80...")
     serve(app, host="0.0.0.0", port=80)

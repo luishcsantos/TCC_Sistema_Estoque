@@ -147,10 +147,8 @@
               <option value="Aberta">Aberta</option>
               <option value="Em andamento">Em andamento</option>
               <option value="Em teste">Em teste</option>
-              <!-- <option value="Aguardando aprovação">Aguardando aprovação</option> -->
               <option value="Aguardando material">Aguardando material</option>
               <option value="Finalizada">Finalizada</option>
-              <!-- <option value="Cancelada">Cancelada</option>S -->
             </select>
           </label>
           <label>Nº OS: <input type="number" name="n_os"></label>
@@ -159,8 +157,6 @@
           <label>Técnico Responsável: <input type="text" name="tecnico_responsavel"></label>
           <label>Valor Serviço: <input type="number" name="valor_servico" step="0.01" value="0.00"></label>
           <label>Data Aprovação: <input type="date" name="data_aprovacao"></label>
-          <!-- <label>Tempo Conserto: <input type="number" name="tempo_conserto" step="0.01"></label> -->
-          <!-- <label>Data Entrega: <input type="date" name="data_entrega"></label> -->
           <label>Observações: <textarea name="observacoes" rows="3"></textarea></label>
           <div class="botao-container-os">
             <button type="submit" class="botao-os">Adicionar</button>
@@ -212,14 +208,6 @@
             <input type="date" name="data_aprovacao" {% if session.access_level not in ['admin', 'vendedor_repos'
               , 'vendedor_serv' ] %}readonly{% endif %}>
           </label>
-          <!-- <label>Tempo Conserto:
-            <input type="number" name="tempo_conserto" step="0.01" {% if session.access_level not in
-              ['admin', 'vendedor_repos' , 'vendedor_serv' ] %}readonly{% endif %}>
-          </label> -->
-          <!-- <label>Data Entrega:
-            <input type="date" name="data_entrega" {% if session.access_level not in ['admin', 'vendedor_repos'
-              , 'vendedor_serv' ] %}readonly{% endif %}>
-          </label> -->
           <label>Observações:
             <textarea name="observacoes" rows="3" {% if session.access_level not in ['admin', 'vendedor_repos'
               , 'vendedor_serv', 'user' ] %}readonly{% endif %}></textarea>
