@@ -4,5 +4,11 @@ venv/
 build/
 dist/
 
+# Arquivos de atualização do database
+att_tabela_componentes.py
+att_tabela_os.py
+att_tabela_pedidos.py
+att_tabela_sgp.py
+
 # Ignora qualquer arquivo .spec, independente do nome da versão
 *.spec
