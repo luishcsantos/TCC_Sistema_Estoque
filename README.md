@@ -6,6 +6,8 @@
 4. Instale os requisitos - pip install -r .\requirements.txt
 5. Rode o comando `flask run --debug` ou `python app.py` , você poderá acessar a aplicação pelo navegador em `127.0.0.1:5000` ou `localhost:5000`
 
+OBS: Baixar o NSSM e deixar a pasta junto ao diretório do projeto - https://nssm.cc/download
+
 ---
 
 * Para fazer o APP.exe
